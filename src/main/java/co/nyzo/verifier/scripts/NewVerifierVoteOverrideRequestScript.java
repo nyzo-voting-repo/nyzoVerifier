@@ -44,21 +44,8 @@ public class NewVerifierVoteOverrideRequestScript {
         NewVerifierVoteOverrideRequest request = new NewVerifierVoteOverrideRequest(newVerifierIdentifier);
         Message message = new Message(MessageType.NewVerifierVoteOverrideRequest33, request);
         message.sign(privateSeed);
-        for (byte[] ipAddress : ipAddresses) {
-            Message.fetch(IpUtil.addressAsString(ipAddress), MeshListener.standardPort, message, new MessageCallback() {
-                @Override
-                public void responseReceived(Message message) {
-                    System.out.println("response is " + message);
-                    numberOfResponsesNotYetReceived.decrementAndGet();
-                }
-            });
-        }
-
-        // Wait for the responses to return.
-        while (numberOfResponsesNotYetReceived.get() > 0) {
-            try {
-                Thread.sleep(300L);
-            } catch (Exception ignored) { }
+       for (byte[] ipAddress : ipAddresses) {
+            Message.fetch(IpUtil.addressAsString(ipAddress), MeshListener.standardPort, message, null);
         }
 
         // Terminate the application.
